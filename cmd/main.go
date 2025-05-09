@@ -9,7 +9,6 @@ import (
 	"github.com/SashaMorkovkin/Final_task_3/internal/api"
 	"github.com/SashaMorkovkin/Final_task_3/internal/calculator"
 	"github.com/SashaMorkovkin/Final_task_3/internal/db"
-	_ "github.com/mattn/go-sqlite3"
 )
 
 var sessionTokens = make(map[string]int)

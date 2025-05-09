@@ -6,6 +6,7 @@ import (
 	"strings"
 )
 
+// Calculate — внешний интерфейс калькулятора
 func Calculate(expression string) (float64, error) {
 	result, err := Calc(expression)
 	if err != nil {
@@ -14,37 +15,19 @@ func Calculate(expression string) (float64, error) {
 	return result, nil
 }
 
-// Функция для преобразования строки в float64
-func StringToFloat64(str string) float64 {
-	degree := float64(1)
-	var res float64 = 0
-	var invers bool = false
-	for i := len(str); i > 0; i-- {
-		if str[i-1] == '-' {
-			invers = true
-		} else {
-			res += float64(9-int('9'-str[i-1])) * degree
-			degree *= 10
-		}
-	}
-	if invers {
-		res = 0 - res
-	}
-	return res
-}
-
-// Проверка, является ли символ знаком операции
+// IsSign — проверка, является ли символ знаком операции
 func IsSign(value rune) bool {
 	return value == '+' || value == '-' || value == '*' || value == '/'
 }
 
-// Основная функция для вычисления выражений
+// Calc — рекурсивный парсер и вычислитель выражений с поддержкой скобок
 func Calc(expression string) (float64, error) {
-	// Убираем пробелы
 	expression = strings.ReplaceAll(expression, " ", "")
 	if len(expression) < 3 {
 		return 0, fmt.Errorf("invalid expression")
 	}
+
+	// Обработка скобок
 	for {
 		openIdx := strings.LastIndex(expression, "(")
 		if openIdx == -1 {
@@ -59,12 +42,11 @@ func Calc(expression string) (float64, error) {
 		if err != nil {
 			return 0, err
 		}
-		// Заменяем выражение в скобках на результат
 		expression = expression[:openIdx] + fmt.Sprintf("%f", result) + expression[openIdx+closeIdx+1:]
 	}
 
-	operators := []rune{'*', '/'}
-	for _, op := range operators {
+	// *, /
+	for _, op := range []rune{'*', '/'} {
 		for {
 			opIdx := strings.IndexRune(expression, op)
 			if opIdx == -1 {
@@ -75,7 +57,6 @@ func Calc(expression string) (float64, error) {
 				leftIdx--
 			}
 			leftIdx++
-
 			rightIdx := opIdx + 1
 			for rightIdx < len(expression) && !IsSign(rune(expression[rightIdx])) {
 				rightIdx++
@@ -92,10 +73,9 @@ func Calc(expression string) (float64, error) {
 				return 0, fmt.Errorf("invalid number: %s", rightOperand)
 			}
 			var result float64
-			switch op {
-			case '*':
+			if op == '*' {
 				result = leftNum * rightNum
-			case '/':
+			} else {
 				if rightNum == 0 {
 					return 0, fmt.Errorf("division by zero")
 				}
@@ -105,6 +85,7 @@ func Calc(expression string) (float64, error) {
 		}
 	}
 
+	// +, -
 	for _, op := range []rune{'+', '-'} {
 		for {
 			opIdx := strings.IndexRune(expression, op)
@@ -116,11 +97,11 @@ func Calc(expression string) (float64, error) {
 				leftIdx--
 			}
 			leftIdx++
-
 			rightIdx := opIdx + 1
 			for rightIdx < len(expression) && !IsSign(rune(expression[rightIdx])) {
 				rightIdx++
 			}
+
 			leftOperand := expression[leftIdx:opIdx]
 			rightOperand := expression[opIdx+1 : rightIdx]
 			leftNum, err := strconv.ParseFloat(leftOperand, 64)
@@ -131,20 +112,16 @@ func Calc(expression string) (float64, error) {
 			if err != nil {
 				return 0, fmt.Errorf("invalid number: %s", rightOperand)
 			}
-
-			// Выполняем операцию
 			var result float64
-			switch op {
-			case '+':
+			if op == '+' {
 				result = leftNum + rightNum
-			case '-':
+			} else {
 				result = leftNum - rightNum
 			}
 			expression = expression[:leftIdx] + fmt.Sprintf("%f", result) + expression[rightIdx:]
 		}
 	}
 
-	// Преобразуем финальный результат в число
 	finalResult, err := strconv.ParseFloat(expression, 64)
 	if err != nil {
 		return 0, fmt.Errorf("invalid expression result")
