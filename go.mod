@@ -1,7 +1,7 @@
 module github.com/SashaMorkovkin/Final_task_3
 
-go 1.23.1
+go 1.18
 
-require github.com/mattn/go-sqlite3 v1.14.28
-
-require crawshaw.io/sqlite v0.3.2 // indirect
+require (
+	github.com/mattn/go-sqlite3 v1.14.14
+)
