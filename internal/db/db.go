@@ -16,7 +16,6 @@ func InitDB() {
 		log.Fatalf("Failed to open database: %v", err)
 	}
 
-	// Создание таблиц, если они не существуют
 	_, err = DB.Exec(`
 		CREATE TABLE IF NOT EXISTS users (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,

@@ -22,14 +22,12 @@ type Task struct {
 
 // Функция для регистрации пользователя
 func RegisterUser(login, password string) (*User, error) {
-	// Проверка на существование пользователя
 	var existingUser User
 	err := db.DB.QueryRow("SELECT id, login FROM users WHERE login = ?", login).Scan(&existingUser.ID, &existingUser.Login)
 	if err == nil {
 		return nil, fmt.Errorf("user already exists")
 	}
 
-	// Добавляем нового пользователя в базу данных
 	stmt, err := db.DB.Prepare("INSERT INTO users (login, password) VALUES (?, ?)")
 	if err != nil {
 		return nil, fmt.Errorf("could not prepare statement: %v", err)

@@ -36,7 +36,6 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Регистрация пользователя
 	user, err := api.RegisterUser(creds.Login, creds.Password)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusConflict)
@@ -54,18 +53,15 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Авторизация пользователя
 	user, err := api.AuthenticateUser(creds.Login, creds.Password)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusUnauthorized)
 		return
 	}
 
-	// Генерация токена
 	token := fmt.Sprintf("token_%d", user.ID)
 	sessionTokens[token] = user.ID
 
-	// Отправляем токен
 	json.NewEncoder(w).Encode(map[string]string{"token": token})
 }
 
@@ -85,14 +81,12 @@ func Calculate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Вычисление результата
 	result, err := calculator.Calculate(input.Expression)
 	if err != nil {
 		http.Error(w, "Calculation error: "+err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	// Сохранение задачи
 	task, err := api.SaveTask(userID, input.Expression, fmt.Sprintf("%f", result))
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
