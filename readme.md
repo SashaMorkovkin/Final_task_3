@@ -12,10 +12,63 @@
    git clone https://github.com/SashaMorkovkin/Final_task_3.git
    cd Final_task_3
 
-3. Убедитесь что у вас скачан gcc
-если что вот ссылка на видео: https://youtu.be/Zcy981HhGw0?si=7_jKo2wO-fcRdr76
 
-Запуск проекта:
-go run ./cmd/main.go
-Должно вывести:
-Server started on :8080
++ Запуск сервера:
+    go run cmd/main.go
+   > PS: Сервер работает на порте 8080
+
+## Примеры запросов
++ Пример №1 (отправка примера)
+    + Команда:
+        curl --location 'localhost:8080/api/v1/calculate' \
+         --header 'Authorization: Bearer your_jwt_token_here' \
+         --header 'Content-Type: application/json' \
+         --data '{
+           "expression": "2+2*2"
+        }'
+
+
+    + Ответ:
+        >{"id": 1, "expression": "2+2*2", "result": "6.000000"}
+
++ + Если калькулятор не может посчитать :
+    >{"Error calculating expression"}
++ В других случаях :
+    >{"Expression not found"}
+
++ Пример запроса для регистрации с помощью curl:
+  + Команда:
+       curl --location 'localhost:8080/api/v1/register' \
+      --header 'Content-Type: application/json' \
+      --data '{
+        "login": "username",
+        "password": "password123"
+      }'
+
+  + Ответ:
+       {
+        "id": 1,
+        "login": "username"
+      }
+
++ Пример запроса для входа с помощью curl:
+   + Команда:
+          curl --location 'localhost:8080/api/v1/login' \
+         --header 'Content-Type: application/json' \
+         --data '{
+           "login": "username",
+           "password": "password123"
+         }'
+  + Ответ:
+          {
+           "token": "your_jwt_token_here"
+         }
+
++ Пример, когда пользователь ещё не авторизовался:
+  + Вывод:
+       Unauthorized
+  
+
+
+
+
