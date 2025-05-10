@@ -12,6 +12,10 @@
    git clone https://github.com/SashaMorkovkin/Final_task_3.git
    cd Final_task_3
 
+3. Убедитесь что у вас скачан gcc
+если что вот ссылка на видео: https://youtu.be/Zcy981HhGw0?si=7_jKo2wO-fcRdr76
 
-##Запуск сервера:
-    >go run cmd/main.go
+Запуск проекта:
+go run ./cmd/main.go
+Должно вывести:
+Server started on :8080
